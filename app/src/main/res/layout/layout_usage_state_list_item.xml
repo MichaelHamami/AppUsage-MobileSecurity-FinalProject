@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recyclerview_item_parent_linlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/usage_state_item_TXT_app_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        />
+
+    <TextView
+        android:id="@+id/usage_state_item_TXT_last_time_used"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginStart="5dp"
+        />
+
+
+    <TextView
+        android:id="@+id/usage_state_item_TXT_total_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp"
+        />
+
+
+</LinearLayout>

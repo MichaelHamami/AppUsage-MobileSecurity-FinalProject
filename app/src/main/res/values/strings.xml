@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">App Use</string>
     <string name="get_apps">Get Apps</string>
+    <string name="usage_settings">Usage Settings</string>
+    <string name="in_order_to_show_the_usage_data_of_other_apps_we_need_to_get_accses_of_usage_data_from_settings">In Order to show the usage data of other apps we need to get accses of usage data from settings</string>
+    <string name="title_activity_usage_stats">ActivityUsageStats</string>
+
+    <string name="usage_state_txt_header_time_used">Time Used</string>
+    <string name="usage_state_txt_header_last_used_time">Last Use</string>
+    <string name="usage_state_txt_header_app_label">App Name</string>
+    <string name="sorted_by">sorted By</string>
 </resources>

@@ -16,4 +16,23 @@
         android:text="@string/get_apps"
 />
 
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/main_BTN_usage_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/usage_settings"
+        android:visibility="invisible"
+        />
+    <TextView
+        android:id="@+id/main_TXT_explanation_usage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/in_order_to_show_the_usage_data_of_other_apps_we_need_to_get_accses_of_usage_data_from_settings"
+        android:textSize="25sp"
+        android:layout_above="@id/main_BTN_usage_settings"
+        android:layout_marginBottom="30dp"
+        android:visibility="invisible"
+        />
 </RelativeLayout>

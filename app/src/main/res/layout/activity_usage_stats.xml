@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/usage_state_TXT_orderBy"
+                android:text="@string/sorted_by"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Spinner
+                android:id="@+id/usage_state_SPINNER"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/usage_stats_display_order_types" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <TextView
+            android:text="@string/usage_state_txt_header_app_label"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/usage_state_txt_header_last_used_time"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_weight="2"
+            android:layout_marginStart="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="@string/usage_state_txt_header_time_used"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="5dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/pkg_list"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawSelectorOnTop="false" />
+</LinearLayout>
