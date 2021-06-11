@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton main_BTN_get_apps;
     private MaterialButton main_BTN_usage_settings;
     private TextView main_TXT_explanation_usage;
-    private UsageStatsManager mUsageStatsManager;
-
-    private Map<String, String> mAppLabelList;
-    private final ArrayMap<String, String> mAppLabelMap = new ArrayMap<>();
-
 
 
     @Override
@@ -90,56 +85,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "getApps called");
         Intent intent = new Intent(this, ActivityUsageStats.class);
         startActivity(intent);
-
-//
-//
-//
-//
-//
-//
-//
-//
-//        final PackageManager pm = getPackageManager();
-////get a list of installed apps.
-//        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.DAY_OF_YEAR, -5);
-//        mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
-//        final List<UsageStats> stats =
-//                mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST,
-//                        cal.getTimeInMillis(), System.currentTimeMillis());
-//        ArrayMap<String, UsageStats> map = new ArrayMap<>();
-//        final int statCount = stats.size();
-//        for (int i = 0; i < statCount; i++) {
-//            final android.app.usage.UsageStats pkgStats = stats.get(i);
-//
-////            if(i == 0) {
-////                Log.d(TAG,  pkgStats.toString());
-//            Log.d(TAG,  pkgStats.getPackageName().toString());
-//                Log.d(TAG, DateUtils.formatSameDayTime(pkgStats.getLastTimeUsed(),
-//                        System.currentTimeMillis(), DateFormat.MEDIUM, DateFormat.MEDIUM).toString());
-////                Log.d(TAG, DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000));
-//                Log.d(TAG, DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground()));
-//
-////            }
-//            // load application labels for each application
-//            try {
-//                ApplicationInfo appInfo = pm.getApplicationInfo(pkgStats.getPackageName(), 0);
-//                String label = appInfo.loadLabel(pm).toString();
-//                mAppLabelMap.put(pkgStats.getPackageName(), label);
-//                Log.d(TAG, label);
-//
-//                UsageStats existingStats =
-//                        map.get(pkgStats.getPackageName());
-//                if (existingStats == null) {
-//                    map.put(pkgStats.getPackageName(), pkgStats);
-//                } else {
-//                    existingStats.add(pkgStats);
-//                }
-//
-//            } catch (PackageManager.NameNotFoundException e) {
-//                // This package may be gone.
-//            }
-//        }
     }
 }
