@@ -2,29 +2,17 @@ package il.ma.appuse;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.AppOpsManager;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.format.DateUtils;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -32,24 +20,42 @@ public class MainActivity extends AppCompatActivity {
     private MaterialButton main_BTN_usage_settings;
     private TextView main_TXT_explanation_usage;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViews();
         initViews();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: called");
         boolean granted = checkUsagePermission();
-        Log.d(TAG, String.valueOf(granted));
-        if(!granted)
+        if(granted)
         {
-            showUsageUI();
+            removeExplanationUI();
+        }
+        else
+        {
+            showUsageExplanationUI();
         }
     }
 
-    private void showUsageUI() {
+    private void showUsageExplanationUI() {
         this.main_TXT_explanation_usage.setVisibility(View.VISIBLE);
         this.main_BTN_usage_settings.setVisibility(View.VISIBLE);
+    }
+    
+    private void removeExplanationUI() {
+        this.main_TXT_explanation_usage.setVisibility(View.GONE);
+        this.main_BTN_usage_settings.setVisibility(View.GONE);
     }
 
     private boolean checkUsagePermission() {
