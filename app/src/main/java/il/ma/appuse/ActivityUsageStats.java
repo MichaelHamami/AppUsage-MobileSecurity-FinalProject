@@ -1,5 +1,8 @@
 package il.ma.appuse;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,6 +19,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+
+import android.provider.Settings;
 import android.text.format.DateUtils;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -44,7 +49,7 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
     private PackageManager mPackageManager;
     private CheckBox mChkAllApps;
     private ImageView mOrderByArrow;
-    private static int mOrderBy = 1;
+    private static int ORDER_BY = 1;
 
 
     public static class AppNameComparator implements Comparator<UsageStats> {
@@ -58,7 +63,7 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         public final int compare(UsageStats a, UsageStats b) {
             String val_1 = mAppLabelList.get(a.getPackageName());
             String val_2 = mAppLabelList.get(b.getPackageName());
-            return val_1.compareTo(val_2) * mOrderBy;
+            return val_1.compareTo(val_2) * ORDER_BY;
         }
     }
 
@@ -66,14 +71,14 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         @Override
         public final int compare(UsageStats a, UsageStats b) {
             // return by descending order
-            return (int)(b.getLastTimeUsed() - a.getLastTimeUsed()) * mOrderBy;
+            return (int)(b.getLastTimeUsed() - a.getLastTimeUsed()) * ORDER_BY;
         }
     }
 
     public static class UsageTimeComparator implements Comparator<UsageStats> {
         @Override
         public final int compare(UsageStats a, UsageStats b) {
-            return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground()) * mOrderBy;
+            return (int)(b.getTotalTimeInForeground() - a.getTotalTimeInForeground()) * ORDER_BY;
         }
     }
 
@@ -228,7 +233,22 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         }
     }
 
-    /** Called when the activity is first created. */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!MainActivity.CheckUsagePermission(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Usage Access Permission");
+            builder.setMessage("Usage access permission was turned off, please turn it back on in order to use the app");
+            builder.setPositiveButton("Take Me To Settings", (dialog, which) -> startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)));
+            builder.setNegativeButton("Cancel", (dialog, which) -> finish());
+            builder.setCancelable(false);
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -254,8 +274,8 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         });
 
         mOrderByArrow.setOnClickListener(v -> {
-            mOrderBy *= -1;
-            if(mOrderBy == 1) {
+            ORDER_BY *= -1;
+            if(ORDER_BY == 1) {
                 mOrderByArrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_up_24);
             } else {
                 mOrderByArrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);

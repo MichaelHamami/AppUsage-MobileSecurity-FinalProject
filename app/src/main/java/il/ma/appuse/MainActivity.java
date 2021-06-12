@@ -2,8 +2,10 @@ package il.ma.appuse;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: called");
-        boolean granted = checkUsagePermission();
+        boolean granted = CheckUsagePermission(this);
         if(granted)
         {
             removeExplanationUI();
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         else
         {
             showUsageExplanationUI();
+
         }
     }
 
@@ -54,19 +57,18 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void removeExplanationUI() {
-        this.main_TXT_explanation_usage.setVisibility(View.GONE);
+        this.main_TXT_explanation_usage.setVisibility(View.INVISIBLE);
         this.main_BTN_usage_settings.setVisibility(View.GONE);
     }
 
-    private boolean checkUsagePermission() {
+    public static boolean CheckUsagePermission(Context context) {
         boolean granted;
-        AppOpsManager appOps = (AppOpsManager) this
-                .getSystemService(Context.APP_OPS_SERVICE);
+        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(), this.getPackageName());
+                android.os.Process.myUid(), context.getPackageName());
 
         if (mode == AppOpsManager.MODE_DEFAULT) {
-            granted = (this.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
+            granted = (context.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
         } else {
             granted = (mode == AppOpsManager.MODE_ALLOWED);
         }
@@ -78,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
         this.main_BTN_usage_settings.setOnClickListener(v->goUsageSettings());
     }
 
-    private void goUsageSettings() {
-       startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+    public  void goUsageSettings() {
+        startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
     }
 
     private void findViews() {
@@ -87,9 +89,18 @@ public class MainActivity extends AppCompatActivity {
         this.main_TXT_explanation_usage = findViewById(R.id.main_TXT_explanation_usage);
         this.main_BTN_usage_settings = findViewById(R.id.main_BTN_usage_settings);
     }
-    private void getApps() {
+    public void getApps() {
         Log.d(TAG, "getApps called");
-        Intent intent = new Intent(this, ActivityUsageStats.class);
-        startActivity(intent);
+        if(CheckUsagePermission(this)) {
+            startActivity(new Intent(this, ActivityUsageStats.class));
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Usage Access Permission");
+            builder.setMessage("There's no permission for this app to access your system usage data, please go to 'Usage Access' in your device to enable access to the data.");
+            builder.setPositiveButton("Take Me To Settings", (dialog, which) -> goUsageSettings());
+            builder.setNegativeButton("Cancel", (dialog, which) -> {});
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 }
