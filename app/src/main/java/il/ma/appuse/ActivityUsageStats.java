@@ -3,6 +3,7 @@ package il.ma.appuse;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.app.Activity;
@@ -50,6 +51,7 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
     private CheckBox mChkAllApps;
     private ImageView mOrderByArrow;
     private static int ORDER_BY = 1;
+    private ListView mListView;
 
 
     public static class AppNameComparator implements Comparator<UsageStats> {
@@ -118,18 +120,18 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
             final int statCount = stats.size();
             for (int i = 0; i < statCount; i++) {
                 final android.app.usage.UsageStats pkgStats = stats.get(i);
-
                 try {
                     ApplicationInfo appInfo = mPackageManager.getApplicationInfo(pkgStats.getPackageName(), 0);
-
                     // Filter apps the user haven't used since installing this app
-                    if (mChkAllApps.isChecked() && pkgStats.getLastTimeUsed() == 0){
+                    if (mChkAllApps.isChecked() && pkgStats.getLastTimeUsed() == 0 || pkgStats.getPackageName().equals(getPackageName())){
                         continue;
                     }
 
                     String label = appInfo.loadLabel(mPackageManager).toString();
-                    mAppLabelMap.put(pkgStats.getPackageName(), label);
 
+//                    Log.d(TAG, pkgStats.getPackageName() + " | " + label);
+//                    Log.d(TAG, label);
+                    mAppLabelMap.put(pkgStats.getPackageName(), label);
                     UsageStats existingStats = map.get(pkgStats.getPackageName());
                     if (existingStats == null) {
                         map.put(pkgStats.getPackageName(), pkgStats);
@@ -201,8 +203,6 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
                 } else {
                     holder.lastTimeUsed.setText(NEVER_USED);
                 }
-
-
                 holder.usageTime.setText(DateUtils.formatElapsedTime(pkgStats.getTotalTimeInForeground() / 1000));
             } else {
                 Log.d(TAG, "No usage stats info for app:" + position);
@@ -211,8 +211,7 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         }
 
         void sortList(int sortOrder) {
-            if (mDisplayOrder == sortOrder) {
-                // do nothing
+            if (mDisplayOrder == sortOrder) { // same sort order - do nothing
                 return;
             }
             mDisplayOrder= sortOrder;
@@ -247,6 +246,8 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
             AlertDialog alert = builder.create();
             alert.show();
         }
+        refreshDisplayAppList();
+
     }
 
     @Override
@@ -259,18 +260,16 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
         mUsageStatsManager = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
         mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mPackageManager = getPackageManager();
-
         Spinner typeSpinner = findViewById(R.id.activity_usage_state_SPINNER);
         typeSpinner.setOnItemSelectedListener(this);
 
-        ListView listView = findViewById(R.id.pkg_list);
+        mListView = findViewById(R.id.pkg_list);
         mAdapter = new UsageStatsAdapter();
-        listView.setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
 
         mChkAllApps.setOnClickListener(v -> {
-            mAdapter = new UsageStatsAdapter();
-            listView.setAdapter(mAdapter);
+            refreshDisplayAppList();
         });
 
         mOrderByArrow.setOnClickListener(v -> {
@@ -280,10 +279,14 @@ public class ActivityUsageStats extends Activity implements OnItemSelectedListen
             } else {
                 mOrderByArrow.setImageResource(R.drawable.ic_baseline_keyboard_arrow_down_24);
             }
-            mAdapter = new UsageStatsAdapter();
-            listView.setAdapter(mAdapter);
+            refreshDisplayAppList();
         });
 
+    }
+
+    private void refreshDisplayAppList() {
+        mAdapter = new UsageStatsAdapter();
+        mListView.setAdapter(mAdapter);
     }
 
     private void setUpViews() {
